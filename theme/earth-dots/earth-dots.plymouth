@@ -1,0 +1,10 @@
+[Plymouth Theme]
+Name=Earth Dots
+Description=A dot-matrix earth spinning slowly in the middle of a black screen
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/earth-dots
+ScriptFile=/usr/share/plymouth/themes/earth-dots/earth-dots.script
+# Listed so plymouth-populate-initrd copies Inter into the initramfs
+Font=Inter

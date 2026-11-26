@@ -1,0 +1,107 @@
+# Earth Dots: dot-matrix earth spinning slowly in the middle of the screen.
+# 180 pre-rendered frames (2 degrees each). Plymouth refreshes at 50 Hz;
+# we advance one frame every TICKS refreshes and cross-fade into the next
+# frame in between, so one full turn takes 180 * TICKS / 50 seconds.
+
+FRAMES = 180;
+TICKS = 5;            # 180 * 5 / 50 = 18 s per turn
+FONT = "Inter 13";
+FADE_IN_TICKS = 40;   # 0.8 s fade-in at start
+
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+fun frame_name(i) {
+    n = i + 1;
+    if (n < 10) return "earth-000" + n + ".png";
+    if (n < 100) return "earth-00" + n + ".png";
+    return "earth-0" + n + ".png";
+}
+
+center_x = Window.GetX() + Window.GetWidth() / 2;
+center_y = Window.GetY() + Window.GetHeight() / 2;
+
+cur_index = 0;
+cur_image = Image(frame_name(0));
+next_image = Image(frame_name(1));
+size = cur_image.GetWidth();
+
+base = Sprite(cur_image);
+fade = Sprite(next_image);
+base.SetPosition(center_x - size / 2, center_y - size / 2, 10);
+fade.SetPosition(center_x - size / 2, center_y - size / 2, 11);
+base.SetOpacity(0);
+fade.SetOpacity(0);
+
+tick = 0;
+age = 0;
+
+fun refresh_callback() {
+    tick++;
+    if (tick >= TICKS) {
+        tick = 0;
+        cur_index = (cur_index + 1) % FRAMES;
+        cur_image = next_image;
+        next_image = Image(frame_name((cur_index + 1) % FRAMES));
+        base.SetImage(cur_image);
+        fade.SetImage(next_image);
+    }
+    master = 1;
+    if (age < FADE_IN_TICKS) {
+        age++;
+        master = age / FADE_IN_TICKS;
+    }
+    base.SetOpacity(master);
+    fade.SetOpacity(master * tick / TICKS);
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+# ---- Text below the globe (messages, password / question prompts) ----
+
+text_y = center_y + size / 2 + 40;
+
+message_sprite = Sprite();
+message_sprite.SetZ(20);
+prompt_sprite = Sprite();
+prompt_sprite.SetZ(20);
+entry_sprite = Sprite();
+entry_sprite.SetZ(20);
+
+fun place_text(sprite, text, y, alpha) {
+    img = Image.Text(text, 1, 1, 1, alpha, FONT);
+    sprite.SetImage(img);
+    sprite.SetPosition(center_x - img.GetWidth() / 2, y, 20);
+    sprite.SetOpacity(1);
+}
+
+fun display_message_callback(text) {
+    place_text(message_sprite, text, text_y + 70, 0.6);
+}
+fun hide_message_callback(text) {
+    message_sprite.SetOpacity(0);
+}
+Plymouth.SetDisplayMessageFunction(display_message_callback);
+Plymouth.SetHideMessageFunction(hide_message_callback);
+
+fun display_normal_callback() {
+    prompt_sprite.SetOpacity(0);
+    entry_sprite.SetOpacity(0);
+}
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
+
+fun display_password_callback(prompt, bullets) {
+    if (prompt == "") prompt = "Password";
+    place_text(prompt_sprite, prompt, text_y, 0.85);
+    dots = "";
+    for (i = 0; i < bullets && i < 32; i++) dots = dots + "● ";
+    if (dots == "") dots = " ";
+    place_text(entry_sprite, dots, text_y + 30, 0.85);
+}
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+
+fun display_question_callback(prompt, entry) {
+    place_text(prompt_sprite, prompt, text_y, 0.85);
+    if (entry == "") entry = " ";
+    place_text(entry_sprite, entry, text_y + 30, 0.85);
+}
+Plymouth.SetDisplayQuestionFunction(display_question_callback);
