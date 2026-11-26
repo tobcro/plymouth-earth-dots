@@ -2,6 +2,14 @@
 
 A minimal [Plymouth](https://gitlab.freedesktop.org/plymouth/plymouth) boot splash for Ubuntu: a dot-matrix earth spinning slowly in the middle of a black screen. There's no vendor logo and no spinner. Any text, such as a disk-encryption password prompt, is set in [Inter](https://rsms.me/inter/).
 
+> [!NOTE]
+> **Made with AI.** Earth Dots was built in collaboration with
+> [Claude Code](https://claude.com/claude-code), Anthropic's AI coding
+> assistant. I came up with the ideas, tried every change on my own machine and
+> sent it back when it wasn't right; Claude wrote most of the code. If you'd
+> rather keep your boot screen free of AI-written code, no hard feelings, this
+> is your exit sign. 👋
+
 <p align="center">
   <img src="docs/earth-dots.gif" width="320" alt="The dot-matrix earth spinning: white dots for land, faint dots for ocean, on black">
 </p>
