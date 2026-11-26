@@ -2,9 +2,27 @@
 
 A minimal [Plymouth](https://gitlab.freedesktop.org/plymouth/plymouth) boot splash for Ubuntu: a dot-matrix earth spinning slowly in the middle of a black screen. There's no vendor logo and no spinner. Any text, such as a disk-encryption password prompt, is set in [Inter](https://rsms.me/inter/).
 
-![Preview: the dot-matrix earth (right) next to an unused solid variant (left)](earth-preview.gif)
+<p align="center">
+  <img src="docs/earth-dots.gif" width="320" alt="The dot-matrix earth spinning: white dots for land, faint dots for ocean, on black">
+</p>
 
-*The preview shows two styles; the theme uses the dot-matrix one on the right.*
+The animation above is the theme's own 180 frames, played at the real speed.
+
+## What it looks like
+
+At boot, the globe sits alone in the middle of the screen (here at 3440 × 1440):
+
+![Full boot screen: a small dot-matrix earth centred on a wide black screen](docs/screen-boot.png)
+
+When the system asks for a password, for example to unlock an encrypted disk, the prompt and the typed characters appear under the globe in Inter:
+
+<p align="center">
+  <img src="docs/screen-password-detail.png" width="600" alt="Close-up: the globe with 'Please enter passphrase for disk nvme0n1p3' and eight bullets below it">
+</p>
+
+A boot splash can't be screenshotted, so these two images are rendered from the theme's own frames, font and layout. On screen, the text is drawn by Plymouth rather than Pillow, so letter spacing can differ very slightly.
+
+## Details
 
 - 180 pre-rendered frames at 240 × 240 px (about 4 MB), one full turn every 18 s, with a cross-fade between frames so the spin stays smooth
 - Earth tilted 23.4° and seen from slightly above the equator, turning west to east
